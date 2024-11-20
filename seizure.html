@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seizure Tiem</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-color: black;
+            color: red;
+        }
+
+        #warning {
+            font-size: 3vw;
+            color: red;
+            background-color: black;
+            padding: 2vw;
+            text-align: center;
+            border: 5px solid red;
+            border-radius: 10px;
+            box-shadow: 0 0 20px red;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            line-height: 1.5;
+        }
+
+        #startButton {
+            font-size: 2.5vw;
+            padding: 1vw 2vw;
+            margin-top: 1vw;
+            background-color: red;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 10px red;
+        }
+
+        #seizureTiem {
+            font-size: 10vw;
+            font-weight: bold;
+            display: none;
+            text-shadow: 0 0 10px white, 0 0 20px white;
+            width: 90%;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div id="warning">
+        <p>WARNING: This Discord Activity contains rapidly flashing colors that may trigger seizures for individuals with photosensitive epilepsy. Viewer discretion is advised. Discontinue IMMEDIATELY if you experience discomfort.</p>
+        <button id="startButton">Start</button>
+    </div>
+
+    <div id="seizureTiem">SEIZURE TIME!</div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const warning = document.getElementById('warning');
+        const seizureTiem = document.getElementById('seizureTiem');
+        let interval, timer;
+
+        const messages = [
+            { text: "SEIZURE TIME!", time: 0 },
+            { text: "This is getting weird...", time: 15 },
+            { text: "What are you doing with your life?", time: 30 },
+            { text: "Are you okay?", time: 45 },
+            { text: "Seriously, go do something else.", time: 60 },
+            { text: "Do you need me to call 911?", time: 75 },
+            { text: "Alright, I give up.", time: 90 }
+        ];
+
+        function brightColor() {
+            const neonColors = [
+                '#FF00FF', '#00FF00', '#FFFF00', '#FF0000', '#00FFFF', '#FF6600', '#FF0000', '#CCFF00'
+            ];
+            return neonColors[Math.floor(Math.random() * neonColors.length)];
+        }
+
+        function invertColor(color) {
+            return '#' + ('000000' + (0xFFFFFF ^ parseInt(color.substring(1), 16)).toString(16)).slice(-6);
+        }
+
+        function updateMessage(elapsedTime) {
+            const message = messages.reduce((current, next) => {
+                return elapsedTime >= next.time ? next : current;
+            });
+            seizureTiem.textContent = message.text;
+        }
+
+        function startSeizure() {
+            seizureTiem.style.display = 'block';
+            warning.style.display = 'none';
+
+            let elapsedTime = 0;
+
+            interval = setInterval(() => {
+                // Flashing every 10ms to 30ms for even faster flashing
+                const flashSpeed = Math.random() * 20 + 10;  // Random speed between 10ms to 30ms
+                const bgColor = brightColor();
+                document.body.style.backgroundColor = bgColor;
+                seizureTiem.style.color = invertColor(bgColor);
+            }, Math.random() * 20 + 10);  // Randomized flash speed between 10ms and 30ms
+
+            timer = setInterval(() => {
+                elapsedTime++;
+                updateMessage(elapsedTime);
+            }, 1000);
+        }
+
+        startButton.addEventListener('click', startSeizure);
+    </script>
+</body>
+</html>
